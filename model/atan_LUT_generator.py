@@ -71,7 +71,7 @@ for entry in range(0, num_entries):
     print(f"    -> {atan_value} | {atan_truncated_fixed_point_repr.to_float()} | {atan_fixed_point_equivalent_natural}")
     # Create LUT line entry
     lut_line = "    " + str(entry) + " => " + str(int(atan_fixed_point_equivalent_natural))
-    if entry == (num_entries-1):
+    if entry != (num_entries-1):
         lut_line = lut_line +","
     # Format line with comments
     input_comment_formatted = f"({fixed_point_repr} | {float_repr})"

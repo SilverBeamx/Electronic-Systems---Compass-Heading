@@ -30,7 +30,7 @@ out_file.write("\n")
 out_file.write("entity " + mname + " is\n")
 out_file.write("  port (\n")
 out_file.write("    address  : in  std_logic_vector(" + str(input_width-1) + " downto 0);\n")
-out_file.write("    ddfs_out : out std_logic_vector(" + str(output_width-1) + " downto 0)\n")
+out_file.write("    atan_out : out std_logic_vector(" + str(output_width-1) + " downto 0)\n")
 out_file.write("  );\n")
 out_file.write("end entity;\n")
 out_file.write("\n")
@@ -84,7 +84,7 @@ out_file.write("  );\n")
 out_file.write("\n")
 out_file.write("begin\n")
 
-out_file.write("  ddfs_out <= std_logic_vector(to_unsigned(LUT(to_integer(unsigned(address)))," + str(output_width) + "));\n")
+out_file.write("  atan_out <= std_logic_vector(to_unsigned(LUT(to_integer(unsigned(address)))," + str(output_width) + "));\n")
 
 out_file.write("end architecture;\n")
 

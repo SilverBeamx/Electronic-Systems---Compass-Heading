@@ -12,8 +12,8 @@ architecture testbench of atan2_piecewise_sync_tb is
 
   component atan2_piecewise_sync is
     port (
-        clk            : in  std_logic;
-        resetn         : in  std_logic;
+        clk             : in  std_logic;
+        resetn          : in  std_logic;
         x               : in  std_logic_vector(7 downto 0);  -- input x coordinate (twos complement)
         y               : in  std_logic_vector(7 downto 0);  -- input y coordinate (twos complement)
         fraction_result : in  std_logic_vector(11 downto 0); -- y/x fraction for LUT addressing

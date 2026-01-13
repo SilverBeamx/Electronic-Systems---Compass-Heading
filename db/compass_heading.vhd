@@ -58,6 +58,8 @@ architecture behavioral of compass_heading is
     signal b_saved_bias     : std_logic_vector(7 downto 0);
     signal a_inverted_bias  : std_logic_vector(7 downto 0);
     signal b_inverted_bias  : std_logic_vector(7 downto 0);
+    signal a_biased         : std_logic_vector(7 downto 0);
+    signal b_biased         : std_logic_vector(7 downto 0);
     signal y                : std_logic_vector(7 downto 0);
     signal x                : std_logic_vector(7 downto 0);
     signal fraction_result  : sfixed(5 downto -6);
@@ -69,6 +71,8 @@ architecture behavioral of compass_heading is
 begin
 
     -- Check if the current coordinates should also be saved as bias
+    a_inverted_bias <= not a;
+    b_inverted_bias <= not b;
     a_bias_register : DFF_N
         generic map (
             Nbit => 8
@@ -77,7 +81,7 @@ begin
             clk     => clk,
             resetn  => resetn,
             en      => a_bias,
-            di      => a,
+            di      => a_inverted_bias,
             do      => a_saved_bias
     );
     b_bias_register : DFF_N
@@ -88,24 +92,22 @@ begin
             clk     => clk,
             resetn  => resetn,
             en      => b_bias,
-            di      => b,
+            di      => b_inverted_bias,
             do      => b_saved_bias
     );
 
     -- Sum previously saved bias (if not saved it is 0 thanks to the reset)
     -- So if bias is enabled, we subtract the saved bias from the current inputs
     -- Note: subtracting bias is adding the two's complement (inverting bits + 1)
-    a_inverted_bias <= not a_saved_bias;
-    b_inverted_bias <= not b_saved_bias;
     a_bias_adder : ripple_carry_adder
         generic map (
             Nbit => 8
         )
         port map (
             a    => a,
-            b    => a_inverted_bias,
+            b    => a_saved_bias,
             cin  => '1',
-            sum  => y,
+            sum  => a_biased,
             cout => open
     );
     b_bias_adder : ripple_carry_adder
@@ -114,10 +116,34 @@ begin
         )
         port map (
             a    => b,
-            b    => b_inverted_bias,
+            b    => b_saved_bias,
             cin  => '1',
-            sum  => x,
+            sum  => b_biased,
             cout => open
+    );
+
+    -- Pipeline the adder result due to high timing constraints of the division
+    a_biased_register : DFF_N
+        generic map (
+            Nbit => 8
+        )
+        port map (
+            clk     => clk,
+            resetn  => resetn,
+            en      => '1',
+            di      => a_biased,
+            do      => y
+    );
+    b_biased_register : DFF_N
+        generic map (
+            Nbit => 8
+        )
+        port map (
+            clk     => clk,
+            resetn  => resetn,
+            en      => '1',
+            di      => b_biased,
+            do      => x
     );
 
     -- Compute the fraction y/x

@@ -3,3 +3,11 @@ modelsim/transcript
 modelsim/work/
 modelsim/vsim.wlf
 modelsim/CompassHeading.cr.mti
+vivado/Compass-Heading.cache
+vivado/Compass-Heading.hw
+vivado/Compass-Heading.ioplanning
+vivado/Compass-Heading.ip_user_files
+vivado/Compass-Heading.runs
+vivado/Compass-Heading.sim
+vivado/Compass-Heading.srcs
+vivado/Compass-Heading.xpr

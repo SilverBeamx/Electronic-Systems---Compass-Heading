@@ -84,7 +84,7 @@ begin
     );
     b_bias_register : DFF_N
         generic map (
-            Nbit => 8
+            Nbit => 1
         )
         port map (
             clk     => clk,
